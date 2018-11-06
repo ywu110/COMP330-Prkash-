@@ -1,0 +1,265 @@
+\documentclass[11pt]{article}
+
+\usepackage[top = 1in, bottom = 1in, left = 0.8in, right = 0.8in, headheight = 14pt]{geometry}
+\usepackage{kpfonts}
+\usepackage{dsfont}
+\usepackage[T1]{fontenc}
+\usepackage{fancyhdr}
+\usepackage{wrapfig}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usepackage[framemethod = tikz]{mdframed}
+
+\let\openbox\relax
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textbf{COMP 330 notes}}
+\fancyhead[R]{Yuhao Wu 260711365}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{2pt}
+
+\newcommand{\paren}[1]{\left( #1 \right)}
+\newcommand{\sqrbrak}[1]{\left[ #1 \right]}
+\newcommand{\curbrak}[1]{\left\{ #1 \right\}}
+\newcommand{\lrangle}[1]{\langle #1 \rangle}
+\newcommand{\LopRcl}[1]{\left(\left. #1 \right]\right.}
+\newcommand{\LclRop}[1]{\left.\left[ #1 \right.\right)}
+\newcommand{\eqabove}[1]{\overset{#1}{=}}
+\newcommand{\ith}[1]{#1^{\text{th}}}
+
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclareMathOperator{\N}{\mathbb{N}}
+\DeclareMathOperator{\Z}{\mathbb{Z}}
+\DeclareMathOperator{\E}{\mathbb{E}}
+\DeclareMathOperator{\R}{\mathbb{R}}
+\DeclareMathOperator{\sigmafield}{\mathcal{S}}
+\DeclareMathOperator{\Borel}{\mathcal{B}\paren{\R}}
+\DeclareMathOperator{\probsymb}{\mathbb{P}}
+\newcommand{\vbar}{\,\middle|\,}
+\newcommand{\func}[2]{#1\paren{#2}}
+\newcommand{\prob}[1]{\mathbb{P}\paren{#1}}
+\newcommand{\diffop}[1]{\,\mathrm{d}#1}
+\newcommand{\indicator}[2]{\func{\mathds{1}_{#1}}{#2}}
+\newcommand{\DF}{\textsc{df}\ }
+\newcommand{\DFnospace}{\textsc{df}}
+\newcommand{\PMF}{\textsc{pmf}\ }
+\newcommand{\PMFnospace}{\textsc{pmf}}
+\newcommand{\PDF}{\textsc{pdf}\ }
+\newcommand{\PDFnospace}{\textsc{pdf}}
+\newcommand{\GammaFunc}[1]{\func{\Gamma}{#1}}
+
+\newenvironment{solution}{\renewcommand\qedsymbol{$\blacksquare$}\begin{proof}[Solution]}{\end{proof}}
+
+
+\setlength{\parindent}{0pt}
+\begin{document}
+\title{COMP 330}
+\date{2018-10-22}
+\author{Name: Yuhao Wu\\
+ID Number: 260711365
+}
+\maketitle
+
+	
+\textbf{Oct 22 \quad Lecture 17}\\\\
+Three important facts
+\begin{itemize}
+	\item Acceptance only happens at the end of the input
+	\item A PDA can't decide to jam when there are moves possible
+	\item When there are choices, PDA can select any choices it wants
+\end{itemize}
+
+\textbf{REMARK:}
+\begin{itemize}
+	\item PDAs are equivalent to CFLs
+	\item DPDAs are equivalent to DCFLs
+	$$ \delta: Q \times \Sigma_{\varepsilon} \times \Gamma_{\varepsilon} \to (Q \times \Gamma_{\varepsilon})\ \ or \ \ \emptyset $$
+\end{itemize}
+
+\textbf{REMARK:}\\
+For every $q \in Q, a \in \Sigma,  x\in \Gamma$, \textbf{exactly one } of $\delta(q, a, x),\ \delta(q, a, \varepsilon ),\ \delta( q, \varepsilon, x ),\  \delta (q, \varepsilon, \varepsilon ) $ is non-empty\\
+\\
+\textbf{Counter-Example such that the intersection of 2CFL is not CFL}
+$$\{ a^n\ b^n\ c^m | n, m \geq 0  \} \cap \{ a^m\ b^n\ c^n | n, m \geq 0  \} = 
+\{ a^n b^n c^n \} $$
+\\
+\textbf{Algorithms for CFLs:}
+$$Is\ L(G) = \emptyset\ ? \quad S \to aS$$
+We say that a NT x is generating if $x \xrightarrow{*} w \in \Sigma^* (\ or\ T^*)$\\
+\\
+\textbf{Theorem : } $L(G) \neq \emptyset \iff S$ is generating\\
+
+\newpage
+\begin{algorithm}
+\caption{Check if it is generating}
+\begin{algorithmic}[1]
+\Procedure{algorithm}{$\quad$}
+\State initialize $GEN = \emptyset$
+\State Put all terminal symbols in $GEN$
+\While{ there is still some changes happening}\Comment{repeat until no change happens}
+\State for each rule $x \to \alpha$, check if every symbol of $\alpha$ belongs to $GEN^*$
+\State if so, add $x$ to $GEN$
+\EndWhile\label{euclidendwhile}
+\If{$S \in Gen$}
+	\State return $L(G) \neq \emptyset$ 
+\EndIf
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\textbf{EXAMPLES[1]:}\\
+$S \to aS \quad GEN = \{ a \}$\\
+Now we have just one rule $S \to \alpha \ where\  \alpha = aS$, as not all of $a, S$ belong to $GEN^*$, we can now end the loop, and $S \notin GEN$, we can conclude $L(G) = \emptyset$\\
+\\
+\textbf{EXAMPLES[2]:}\\
+$S \to bA | aB \quad \quad A \to bAA|aS|a \quad\quad B\to aBB|bS|b$\\
+$[1]:\quad GEN = \{a, b\} \quad\quad [2]:\quad GEN = \{ a, b, A, B, S \} \implies L(G) \neq \emptyset $
+\\
+\\
+There are more complex algorithms to check if $L(G) = \infty$
+\\
+\\
+\textbf{REMARK:}
+\begin{itemize}
+	\item The complement of CFL may not be a CFL
+	\item The complement of DCFL is a DCFL
+\end{itemize}
+
+
+
+
+
+\textbf{OCT.24\quad\quad Lecture 18}\\
+Question: $w \in L(G)$ ? \\
+We can convert $G$ to Chomsky Normal Form $X(non-T) \to AB \quad \quad X \to a (terminal)$\\
+Using Dynamic Programming $O(n^3)$\\
+\\
+(Cocke-Younger-Kasami Algorithm)
+\\
+\\
+\\
+\textbf{PDA: 2 distinct notions of accpetance}
+\begin{itemize}
+	\item Accept by accept states
+	\item Accept by empty stack: at the end of the string is the stack empty?\\
+	There are no accept states.
+\end{itemize}
+Both of them are equally powerful.
+
+
+\newpage
+\textbf{OCT.26\quad\quad Lecture 19}\\
+\\
+\\
+\textbf{PUMPING LEMMA:}\\
+Let $L$ be a $CFL$.\\
+ $\exists p \geq 0$ such that $\forall s \in L$ with $|s|\geq p$, $\exists u,v,w,x,y \in \Sigma^*$ where $s=uvwxy$ such that:
+ \begin{itemize}
+ 	\item $|vx|>0$  (i.e., $v$ and $x$ can't both be the empty string);
+ 	\item $|vwx| \leq p$
+	\item $\forall i\geq 0,\ uv^iwx^iy \in L$
+ \end{itemize}
+ As with regular languages, we can use the contrapositive of the pumping lemma to prove that a language is not context-free. Here's a formal statement of the contrapositive:\\\\
+ Fix some $L$\\
+ $\forall p \geq 0$ such that $\exists s \in L$ with $|s|\geq p$, $\forall u,v,w,x,y \in \Sigma^*$ where $s=uvwxy$ such that:
+  \begin{itemize}
+ 	\item $|vx|>0$  (i.e., $v$ and $x$ can't both be the empty string);
+ 	\item $|vwx| \leq p$
+	\item $\exists i\geq 0,\ uv^iwx^iy \notin L$
+ \end{itemize}
+Then we can say that $L$ is not a CFL\\
+\\
+\textbf{EXAMPLE [1]} $L = \{ a^n\ b^n\ a^n\ |\ n\geq 0 \}$
+\begin{itemize}
+	\item Demon: choose $P$
+	\item I choose $s = a^p\ b^p\ a^p \in L$
+	\item Demon chooses any $ u,v,w,x,y \in \Sigma^*$ where $s=uvwxy$
+\end{itemize}
+$$ \begin{matrix} \underbrace{ a, a, \ldots, a } \\ p \end{matrix} \quad \begin{matrix} \underbrace{ b, b, \ldots, b } \\ p \end{matrix} \quad
+\begin{matrix} \underbrace{ a, a, \ldots, a } \\ p \end{matrix} $$
+
+\begin{itemize}
+	\item $v$  or $x$ straddles a block boundary. Choose $i=2$. Then, the a's and b's would be out of order in the resulting string.
+	\item If $v$ and $x$ both contain only a's or b's, then $v$ and $x$ must be in the same block since $|vwx|<p$, choose $i = 2$
+	\item $v$ has a's and $x$ has b's or $v$ has b's and $x$ has a's\\
+		Then we can choose $i = 2$
+	
+\end{itemize}
+
+\newpage
+
+\textbf{EXAMPLE [2]} $L = \{\ ww | w \in \Sigma^*\ \}$ suppose $\Sigma$ has 2 letters.\\
+Then, we define a new language 
+$$\widehat{L} = L \cap a^*b^*a^*b^* = \{ a^m b^n a^m b^n | m, n \geq 0 \}$$
+Suppose that $L$ is CFL then $\widehat{L} = CFL \cap \text{ regular language} = CFL$
+\begin{itemize}
+	\item Demon: choose $P$
+	\item I choose $s = a^p\ b^p\ a^p\ b^p  \in L$
+	\item Demon chooses any $ u,v,w,x,y \in \Sigma^*$ where $s=uvwxy$
+\end{itemize}
+$$ \begin{matrix} \underbrace{ a, a, \ldots, a } \\ p \end{matrix} \quad \begin{matrix} \underbrace{ b, b, \ldots, b } \\ p \end{matrix} \quad
+\begin{matrix} \underbrace{ a, a, \ldots, a } \\ p \end{matrix} \quad
+\begin{matrix} \underbrace{ b, b, \ldots, b } \\ p \end{matrix} $$
+
+\textbf{NOTE:}
+$\overline{L}$ is a CFL
+$$S \to AB | BA | A | B \quad \quad A \to CAC | a \quad \quad B \to CBC|b \quad \quad C \to a | b$$
+$$ \begin{matrix} \underbrace{ \ldots \ldots\ldots  } \\ n \end{matrix} \quad 
+\begin{matrix} \underbrace{ a} \\ n + 1 \ position \end{matrix}
+ \quad \begin{matrix} \underbrace{ \ldots \ldots\ldots } \\ n \end{matrix} \quad
+\begin{matrix} \underbrace{ \ldots \ldots\ldots  } \\ m \end{matrix} \quad 
+\begin{matrix} \underbrace{ b } \\ n + 1 \text{ position in the second half}\end{matrix}
+ \quad \begin{matrix} \underbrace{ \ldots \ldots\ldots } \\ m \end{matrix} \quad $$
+\newline
+$$ L' = \{\ w\ w^{rec}\  | w \in \Sigma^* \}\quad\quad \textbf{this is CFL}$$
+\\
+\\
+\\
+\textbf{OCT 29 Lecture 20:}\\
+\textbf{REMARK:}\\
+\begin{itemize}
+	\item CFL \textbf{are NOT} closed under complementation. \\
+	Suppose $L_1$ and $L_2$ are context free. $L_1 \cap L_2$ is not necessarily context-free
+	\item $L_1 \cup L_2$ we just need to add one rule $S \to S_1 | S_2$
+	\item $L_1 \cdot L_2$ we just need to add one rule $S \to S_1  S_2$
+\end{itemize}
+
+\textbf{EXAPMLE [1]:} Show $L = \{ 0^i 1^j\ |\ j = i^2 \}$ is not a CFL
+\begin{itemize}
+	\item Demon: choose $P$
+	\item I choose $s = 0^p\ 1^{p^2}  \in L$
+	\item Demon chooses any $ u,v,w,x,y \in \Sigma^*$ where $s=uvwxy$
+\end{itemize}
+$$ \begin{matrix} \underbrace{ 0, 0, \ldots, 0 } \\ p \end{matrix} \quad \begin{matrix} \underbrace{ 1, 1, \ldots, 1 } \\ p^2 \end{matrix}$$
+\begin{itemize}
+	\item $vwx$: all zeros or all ones \quad pick $i \neq 1$
+	\item $v\ or \ x$ overlaps the boundary. I pick $i = 2$
+	\item $v$ : all 0's \quad $x$: all 1's 
+	Either $|v| = 0 \ or \ |x| = 0 \ pick\ i = 2 \quad\quad if\ |v|, |u|\neq 0 \ \ \ pick\ i = 2$
+\end{itemize}
+\newpage
+\textbf{Exercise [1]:} $L = \{ a^p \ |\ p \text{ is a prime} \}$
+\\
+\\
+\textbf{Exercise [2]:} $L = \{ a^i\ b^j\ c^k \ |\ 0 < i < j < k \}$
+
+
+
+
+
+
+
+
+
+
+
+\end{document}

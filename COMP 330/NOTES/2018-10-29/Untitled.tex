@@ -1,0 +1,75 @@
+\documentclass[11pt]{article}
+
+\usepackage[top = 1in, bottom = 1in, left = 0.8in, right = 0.8in, headheight = 14pt]{geometry}
+\usepackage{kpfonts}
+\usepackage{dsfont}
+\usepackage[T1]{fontenc}
+\usepackage{fancyhdr}
+\usepackage{wrapfig}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usepackage[framemethod = tikz]{mdframed}
+
+\let\openbox\relax
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textbf{COMP 330 notes}}
+\fancyhead[R]{Yuhao Wu 260711365}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{2pt}
+
+\newcommand{\paren}[1]{\left( #1 \right)}
+\newcommand{\sqrbrak}[1]{\left[ #1 \right]}
+\newcommand{\curbrak}[1]{\left\{ #1 \right\}}
+\newcommand{\lrangle}[1]{\langle #1 \rangle}
+\newcommand{\LopRcl}[1]{\left(\left. #1 \right]\right.}
+\newcommand{\LclRop}[1]{\left.\left[ #1 \right.\right)}
+\newcommand{\eqabove}[1]{\overset{#1}{=}}
+\newcommand{\ith}[1]{#1^{\text{th}}}
+
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclareMathOperator{\N}{\mathbb{N}}
+\DeclareMathOperator{\Z}{\mathbb{Z}}
+\DeclareMathOperator{\E}{\mathbb{E}}
+\DeclareMathOperator{\R}{\mathbb{R}}
+\DeclareMathOperator{\sigmafield}{\mathcal{S}}
+\DeclareMathOperator{\Borel}{\mathcal{B}\paren{\R}}
+\DeclareMathOperator{\probsymb}{\mathbb{P}}
+\newcommand{\vbar}{\,\middle|\,}
+\newcommand{\func}[2]{#1\paren{#2}}
+\newcommand{\prob}[1]{\mathbb{P}\paren{#1}}
+\newcommand{\diffop}[1]{\,\mathrm{d}#1}
+\newcommand{\indicator}[2]{\func{\mathds{1}_{#1}}{#2}}
+\newcommand{\DF}{\textsc{df}\ }
+\newcommand{\DFnospace}{\textsc{df}}
+\newcommand{\PMF}{\textsc{pmf}\ }
+\newcommand{\PMFnospace}{\textsc{pmf}}
+\newcommand{\PDF}{\textsc{pdf}\ }
+\newcommand{\PDFnospace}{\textsc{pdf}}
+\newcommand{\GammaFunc}[1]{\func{\Gamma}{#1}}
+
+\newenvironment{solution}{\renewcommand\qedsymbol{$\blacksquare$}\begin{proof}[Solution]}{\end{proof}}
+
+
+\setlength{\parindent}{0pt}
+\begin{document}
+\title{COMP 330}
+\date{2018-10-29}
+\author{Name: Yuhao Wu\\
+ID Number: 260711365
+}
+\maketitle
+
+	
+\textbf{Oct 29 \quad Lecture 17}\\\\
+
+\end{document}

@@ -1,0 +1,160 @@
+\documentclass [9 pt]{article}
+\usepackage[margin = 1in]{geometry}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{bbm}
+ \usepackage{amsmath}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{ wasysym }
+\usepackage{enumerate}
+\usepackage{color}
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+\usepackage{tikz}
+\usepackage{booktabs}
+
+\theoremstyle{definition}
+\newtheorem{problem}{Problem}
+\newtheorem{theorem}{Theorem}
+\newtheorem*{corollary}{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{Yuhao Wu \quad 260711365} 
+\rhead{\bfseries COMP 330}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+
+\setlength{\parindent}{0pt}
+
+
+\begin{document}
+
+\title{COMP 330}
+\date{2018-9-24}
+\author{Name: Yuhao Wu\\
+ID Number: 260711365
+}
+\maketitle
+
+
+\textbf{DATE:9-24 LECTURE 9}\\
+\newline
+Consider $L = \{a^n b^n| n \geq 0 \}$, the language is not regular, as finite automata can't do unbounded counting.\\
+Suppose that $M$ recognizes $L$ ($M$ is a DFA)\\
+We assume that $M$ has $k$ states, we take the word $a^m b^m\quad (m > k)$, according to the pigeon hole theorem, such a string must hit the same state twice as it has more "a" than the number of states. \\
+Suppose that there is such a loop with length $k$, then we can say that the word $ a^{m+k} b^m\quad a^{m+2k} b^m\quad a^{m+3k} b^m\ $ should also be accepted, while there are not in the language.\\
+\section*{Pumping Lemma:}
+\textbf{THEOREM:} For any regular language $L$, $\exists p >0$, such that  
+$\forall w \in L, |w| \geq p $ , $ \exists x, y, z\in \Sigma^* $  such that $w = x y z$ and $|x y| \leq P , |y| \geq 1$,\\
+then we can say that $\forall i \in \mathbb{N}, xy^{i}z \in L$\\
+\textbf{NOTE}: $x, y$ could be $\varepsilon$\\
+\newline
+\textbf{REMARK:}
+\begin{itemize}
+	\item $L$ is regular $\implies L$ can be pumped
+	\item $L $ can't be pumped $\implies L$ is not regular
+\end{itemize}
+
+\section*{Contrapositive Version:}
+Suppose that $L \in \Sigma^*$, such that, $\forall p > 0, \exists w \in L \text{ with } |w| \geq P$ such that $\forall x, y, z \in \Sigma^*$ such that $ w = xyz$ and $|xy| \leq P, |y | \geq 1$, $\exists i \in \mathbb{N}, xy^i z \notin L$, \\
+then, we can say $L$ is not regular.\\
+\newline
+We can consider it as a game:
+Demon: $\forall\quad\quad\quad$ Me: $\exists$
+\begin{itemize}
+	\item(1): Demon chooses a random number p, I won't know what he will choose
+	\item(2): I choose a string $w\text{ with } |w| > p$,  this $|w|$ tends to be represented in terms of $p$, which means I do operation according to Demon's choice
+	\item(3): Demon choose $ x, y, z $ randomly, with $|x y| \leq P, |y| \geq 1 $
+	\item(4): I choose $i$, so that $xy^{i}z \notin L$ 
+\end{itemize} 
+
+\newpage
+\textbf{EXAMPLE:} $L = \{a^n b^n | n \geq 0 \}$
+\begin{itemize}
+	\item Demon choose number p
+	\item I will choose word $a^pb^p$, which is obviously in the language
+	\item as Demon has to choose $ x, y, z $ randomly, with $|x y| \leq P, |y| \geq 1 $, so his $xy$ must contains "a" only, suppose $|y| = k$
+	\item I choose $i = 2$, then the $xy^2z = a^{p + k} b^{p}$, obviously, $a^{p + k} b^{p} \notin L$
+\end{itemize}
+
+\section*{Some tricks:}
+$L$ may be hard to pump.\\ 
+\begin{itemize}
+	\item If $R$ is a regular language, then $\bar{R}$ is a regular language\\
+	(as R can be recognized by a DFA, then we just need to change the accept state into decline state and change the decline state into the accept state)
+	\item If $R$ is a regular language and $L$ is a regular language then $R\cap L$ is a regular language.\\
+	(as union is regular, thus we can use union and complement as well as de morgen's law to prove intersection is regular as well)
+\end{itemize}
+\textbf{EXAMPLE:} $L = \{a^m b^n | m \neq n \}$\\
+Suppose that $L$ is regular, then $\bar{L}$ is regular.
+Then $\bar{L} \cap a^*b^* = \{a^n b^n |  n\geq 0 \} $ is regular, and this is not regular.\\
+\newline
+\newline
+\textbf{DATE:9-26 LECTURE 10}
+\subsection*{EXAMPLE 1}
+$$L = \{ a^{2^{n}}|a, aa, aaaa, \ldots \}$$
+\begin{itemize}
+	\item Demon choose number p
+	\item I choose $|w| = 2^m > p$, obviously $a^{2^m}$ is  in the language $L$
+	\item as Demon has to choose $ x, y, z $ randomly, with $|x y| \leq p, |y| \geq 1 $, so his $|y| \leq P $ 
+	\item I choose $i = 2$, then the $xy^2z = a^{2^m}\cdot a^{|y|} = a^{2^m + |y|}  $. \\
+	So, $|xy^2z| = 2^m + |y| \leq  2^m + p < 2^m + 2^m = 2^{m + 1} $ \\
+	And we know that $|xy^2z| > 2^m $, so $xy^2z$ is not in $L$
+\end{itemize}
+
+\subsection*{EXAMPLE 2}
+$$L = \{ a^{q}|q \text{ is a prime number} \}$$
+\begin{itemize}
+	\item Demon choose number p
+	\item I choose $|w| = n > p$, where n is prime number as well. obviously $a^{n}$ is  in the language $L$
+	\item as Demon has to choose $ x, y, z $ randomly, with $|x y| \leq p, |y| \geq 1 $, so his $y = a^k $ where $0 < k \leq p $ 
+	\item Now, $xy^iz = a^{n + (i-1)k}$, so I choose $i = n+1$, then we have $xy^iz = a^{n + (i-1)k} = a^{n + nk} $ which is not a prime.\\
+\end{itemize}
+\newpage
+\subsection*{EXAMPLE 3}
+
+$$\Sigma = \{a, b\} \quad \quad L = \{ w |\text{the number of a is different from the number of b}  \}$$
+\begin{itemize}
+	\item Demon choose number p
+	\item I choose $w = a^p b^{p! + p}$. Obviously $w$ is  in the language $L$
+	\item as Demon has to choose $ x, y, z $ randomly, with $|x y| \leq p, |y| \geq 1 $, so his $y = a^k $ where $0 < k \leq p $ 
+	\item Now, $xy^iz = a^{p + (i-1)k}b^{p! + p}$, so I choose $i = \frac{p!}{k}+ 1 $, then we have $xy^iz = a^{p! + p} b^{p! + p} $ which is not a prime.\\
+\end{itemize}
+\textbf{OR:}
+$$\bar{L} = \{ w |\text{the number of a is the same as the number of b}  \}$$
+So, we can use $\bar{L} \cap a^*b^* = \{a^n b^n | n \geq 0 \} $, which is not a regular language.\\
+So, $L$ is not regular as well.
+
+\subsection*{EXAMPLE 4}
+$$\Sigma = \{a, b\} \quad \quad L = \{ a^i b^j | gcd(i, j) = 1  \}$$
+We will show $\bar{L}$ is not regular.
+\begin{itemize}
+	\item Demon choose number p
+	\item I choose $q > p+1$ and $q$ is a prime . Obviously $a^q b^q$ is  in the language $\bar{L}$
+	\item as Demon has to choose $ x, y, z $ randomly, with $|x y| \leq p, |y| \geq 1 $, so his $y = a^k $ where $0 < k \leq p $ 
+	\item Now, $xy^iz = a^{q + (i-1)k}b^{q}$, so I choose $i = 0 $, then we have $xy^iz = a^{q-k} b^{q} $ \\
+	As $q - k > p + 1 - k \geq 1$ and $q$ is a prime, so we have $gcd(q-k, q) = 1$, so $ xy^iz \notin \bar{L} $\\
+	Thus $\bar{L}$ is not regular so is $L$
+\end{itemize}
+
+
+
+
+
+
+
+
+
+\end{document}
